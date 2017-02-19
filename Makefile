@@ -25,7 +25,7 @@ RESOURCES := resources
 DATA := data
 ROMFS := romfs
 SOURCES := source
-INCLUDES := $(SOURCES) include
+INCLUDES := $(SOURCES) include source/networking
 
 #---------------------------------------------------------------------------------
 # Resource Setup

@@ -4,6 +4,7 @@
 #include "player.h"
 #include "world.h"
 #include "levels.h"
+#include "networking/networking.h"
 // The following assumes a 128x128px spritesheet with 16x16px sprites.
 #define render_sprite(spritesheet, sprite_index, x, y) ST_RenderSpritePosition((spritesheet), ((sprite_index) % 8) * 16, ((sprite_index) / 8) * 16, 16, 16, (x), (y)) 
 
@@ -66,8 +67,17 @@ void draw_water(st_spritesheet *sheet, int framecount)
 }
 
 int main(int argc, char **argv) {
+	bool player_mode = false;
 	ST_Init();
 	consoleInit(GFX_BOTTOM, NULL);
+
+	Networking network(player_mode);
+	if (!player_mode) {
+	for (int i = 0; i < 5000; i++) {}
+	udsNetworkScanInfo *scanInfo = network.Scan();
+	network.Connect(&scanInfo[0], UDSCONTYPE_Client);
+	}
+
 	int framecount = 0;
 	u64 game_clock;
 	st_spritesheet *player_ss = ST_SpritesheetCreateSpritesheet(
@@ -78,7 +88,6 @@ int main(int argc, char **argv) {
 	World world = World(player_ss);
 	bool level_switch = true;
 	world.load_level(player_ss, current_level);
-	bool player_mode = true;
 	while(aptMainLoop())
 	{
 		ST_RenderStartFrame(GFX_TOP);
@@ -108,15 +117,15 @@ int main(int argc, char **argv) {
 					world.player.move_rel(1, 0);
 				world.player.direction = RIGHT;
 			}
-			if (ST_InputButtonPressed(KEY_SELECT))
-			{
-				player_mode = !player_mode;
-			}
 			if (ST_InputButtonPressed(KEY_START))
 			{
 				level_switch = !level_switch;
 				world.load_level(player_ss, current_level);
 			}
+			if (player_mode)
+				printf("\n%d", (int)network.SendData((void *)world.player.position, sizeof(world.player.position)));
+			else
+				printf("\n%d", (int)network.RecieveData((void *)world.player.position, sizeof(world.player.position)));
 			world.render_all(player_mode, framecount);
 			draw_water(player_ss, framecount);
 			game_clock = ST_TimeRunning() - world.start_time;

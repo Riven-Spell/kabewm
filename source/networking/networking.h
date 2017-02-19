@@ -1,4 +1,5 @@
 #include <common.h>
+#include <cstdlib>
 #ifndef NETWORKING_H
 #define NETWORKING_H
 
@@ -13,7 +14,7 @@ public:
 	Result Connect(udsNetworkScanInfo* network, udsConnectionType cType);
 	Result RecieveData(void* buf, size_t bufsize);
 	Result SendData(void* buf, size_t bufsize);
-
+	Result OpenServer();
     void Fini();
 
 	size_t total_networks = 0;

@@ -3,8 +3,8 @@
 #include <spritetools.h>
 #include <stdio.h>
 enum Sprites
-	WATER_1 = 0,
 {
+	WATER_1 = 0,
 	WATER_3,
 	WATER_2,
 	WATER_4,
