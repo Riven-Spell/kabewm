@@ -1,8 +1,9 @@
 #include "entity.h"
 
-Entity::Entity(st_spritesheet *spritesheet, std::vector<unsigned char> frames)
+Entity::Entity(st_spritesheet *spritesheet, std::vector<unsigned char> frames, int collision)
 {
 	this->position = {0, 0};
+	this->collision = collision;
 	this->id = ++this->last_used_id;
 	this->frames = frames;
 	this->spritesheet = spritesheet;
