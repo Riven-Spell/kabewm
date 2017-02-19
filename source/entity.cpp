@@ -1,10 +1,9 @@
 #include "entity.h"
 
-Entity::Entity(st_spritesheet *spritesheet, size_t framecount, int *frames)
+Entity::Entity(st_spritesheet *spritesheet, std::vector<unsigned char> frames)
 {
 	this.position = {0, 0};
 	this.id = ++this.last_used_id;
-	this.frames_len = frames_len;
 	this.frames = frames;
 	this.spritesheet = spritesheet;
 	this.current_frame = 0;
@@ -13,5 +12,5 @@ Entity::Entity(st_spritesheet *spritesheet, size_t framecount, int *frames)
 Entity::render_next_frame(int framecount)
 {
 	this.current_frame = framecount % frames_len;
-	ST_RenderSpritePosition(this.spritesheet, frames[current_frame , this.position.y, 16, 16, 
+	ST_RenderSpritePosition(this.spritesheet, (int)(frames[current_frame] % 8) * 16, (int)(frames[current_frame] / 8) * 16, 16, 16, this.position.x * 16, this.position.y * 16);
 }
