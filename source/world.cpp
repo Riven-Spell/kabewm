@@ -82,7 +82,7 @@ void World::load_level(st_spritesheet *sheet, level_t level)
 					ent = Entity(sheet, {MINE_OFF, MINE_OFF, MINE_ON, MINE_OFF, MINE_ON, MINE_OFF}, COLLISION_DUD);
 					break;
 				case R:
-					ent = Entity(sheet, {ROCK}, COLLISION_WALL);
+					ent = Entity(sheet, {ROCK}, COLLISION_NONE);
 					break;
 				default:
 					ent = Entity(sheet, {63}, COLLISION_NONE);
