@@ -12,7 +12,9 @@ class World
 	public:
 		Entity grid[WORLD_HEIGHT][WORLD_WIDTH];
 		Player player;
-
+		struct { int x, y; } end_position;	
+		bool player_won();
+		u64 start_time;
 		World(st_spritesheet *sheet);
 		void clear(st_spritesheet *sheet);
 		void render_all(bool isPlayer, int framecount);

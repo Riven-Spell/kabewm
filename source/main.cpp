@@ -12,9 +12,9 @@ level_t level1 =\
 {
 	{1, 13},
 	{13, 1},
-	120,
+	30,
 	{ {W, W, W, W, W, W, W, W, W, W, W, W, W, W, W},
-		{W, B, B, B, B, B, B, B, B, B, B, B, B, B, W},
+		{W, B, B, B, B, B, B, B, B, B, B, B, B, R, W},
 		{W, B, B, B, B, B, B, B, B, B, B, B, B, B, W},
 		{W, B, B, B, B, B, B, B, B, B, B, B, B, B, W},
 		{W, B, B, B, B, B, B, B, B, B, B, B, B, B, W},
@@ -31,13 +31,14 @@ level_t level1 =\
 };
 int main(int argc, char **argv) {
 	ST_Init();
-
+	consoleInit(GFX_BOTTOM, NULL);
 	int framecount = 0;
-
+	u64 game_clock;
 	st_spritesheet *player_ss = ST_SpritesheetCreateSpritesheet(
 		main_spritesheet_data.pixel_data,
 		main_spritesheet_data.width,
 		main_spritesheet_data.height);
+	ST_RenderSetBackground(0x82, 0xE1, 0x11);
 	World world = World(player_ss);
 	world.load_level(player_ss, level1);
 	while(aptMainLoop())
@@ -70,7 +71,14 @@ int main(int argc, char **argv) {
 				world.player.direction = RIGHT;
 			}
 			world.render_all(true, framecount);
+			game_clock = ST_TimeRunning() - world.start_time;
+			if (game_clock > 1000 * level1.seconds)
+				world.load_level(player_ss, level1);
+			else
+				printf("\x1b[0;0H%03d",level1.seconds - (int)game_clock/1000);	
 		ST_RenderEndRender();
+		if (world.player_won())
+			world.load_level(player_ss, level1);
 		if (world.player_is_on_mine())
 			world.load_level(player_ss, level1);
 		framecount++;

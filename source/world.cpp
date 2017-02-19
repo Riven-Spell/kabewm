@@ -92,7 +92,17 @@ void World::load_level(st_spritesheet *sheet, level_t level)
 		}
 	this->player.position.x = level.start_position.x;
 	this->player.position.y = level.start_position.y;
+	this->end_position.x = level.end_position.x;
+	this->end_position.y = level.end_position.y;
+	this->start_time = ST_TimeRunning();
 }
+
+bool World::player_won()
+{
+	return this->player.position.x == this->end_position.x &&\
+				 this->player.position.y == this->end_position.y;
+}
+
 /*
 World::move_player(int direction)
 {
