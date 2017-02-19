@@ -11,3 +11,5 @@ void Player::move_rel(int dx, int dy)
 		this->position.y += dy;
 	}
 }
+
+Player::Player(st_spritesheet *spritesheet, std::vector<unsigned char> frames) : Entity(spritesheet, frames, COLLISION_NONE) {}

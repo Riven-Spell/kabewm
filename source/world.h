@@ -5,6 +5,7 @@
 
 #include "entity.h"
 #include "player.h"
+#include "common.h"
 
 class World
 {

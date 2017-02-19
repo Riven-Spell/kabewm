@@ -20,7 +20,7 @@ class Entity
 		int collision;
 		std::vector<unsigned char> frames;
 		st_spritesheet *spritesheet;
-		virtual void render_next_frame(int framecount);
+		void render_next_frame(int framecount);
 		Entity(st_spritesheet *spritesheet, std::vector<unsigned char> frames, int collision);
 };
 

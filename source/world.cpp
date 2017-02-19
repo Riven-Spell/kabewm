@@ -21,7 +21,7 @@ void World::render_all()
 		for(int j=0; j<WORLD_WIDTH; j++)
 			if(grid[i][j])
 				grid[i][j]->render_next_frame(0);
-	this->player.render_next_frame(0);
+	this->player.render_next_frame(1);
 }
 
 void World::add_to_grid(int x, int y, Entity ent)
