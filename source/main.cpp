@@ -12,7 +12,7 @@ level_t level1 =\
 {
   {1, 13},
   {13, 1},
-  120,
+  25,
   { {W, W, W, W, W, W, W, W, W, W, W, W, W, W, W},
     {W, P, P, W, D, B, B, B, B, B, M, B, W, R, W},
     {W, P, P, S, B, B, S, B, B, B, B, M, W, B, W},
