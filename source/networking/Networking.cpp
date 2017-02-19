@@ -51,7 +51,7 @@ Result Networking::Connect(udsNetworkScanInfo* network, udsConnectionType cType)
     this->network = network;
     this->conntype = cType;
 
-    ret = udsConnectNetwork(&this->network->network,this->passphrase,strlen(passphrase)+1,&this->bindctx,UDS_BROADCAST_NETWORKNODEID, this->conntype, this->data_channel, this->recv_buffer_size);
+    ret = udsConnectNetwork(&this->network->network,this->passphrase,strlen(passphrase)+1,&this->bindctx,UDS_HOST_NETWORKNODEID, this->conntype, this->data_channel, this->recv_buffer_size);
     if(!R_FAILED(ret))
         free(networks);
     return ret;
