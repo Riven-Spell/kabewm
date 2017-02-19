@@ -10,25 +10,50 @@
 //extern const st_image player_spritesheet;
 level_t level1 =\
 {
-	{1, 13},
-	{13, 1},
-	120,
-	{ {W, W, W, W, W, W, W, W, W, W, W, W, W, W, W},
-		{W, B, B, B, B, B, B, B, B, B, B, B, B, B, W},
-		{W, B, B, B, B, B, B, B, B, B, B, B, B, B, W},
-		{W, B, B, B, B, B, B, B, B, B, B, B, B, B, W},
-		{W, B, B, B, B, B, B, B, B, B, B, B, B, B, W},
-		{W, B, B, B, B, B, B, B, B, B, B, B, B, B, W},
-		{W, B, B, B, W, B, B, B, B, B, B, B, B, B, W},
-		{W, B, B, S, B, S, B, B, B, B, B, B, B, B, W},
-		{W, W, W, W, B, B, B, B, B, B, B, B, B, B, W},
-		{W, B, B, W, B, W, M, M, B, W, B, B, B, B, W},
-		{W, D, B, B, B, S, S, S, B, W, B, B, B, B, W},
-		{W, B, P, P, W, M, M, M, M, W, B, B, B, B, W},
-		{W, B, P, P, B, B, B, W, W, W, B, B, B, B, W},
-		{W, B, B, S, P, B, B, B, B, B, B, B, B, B, W},
-		{W, W, W, W, W, W, W, W, W, W, W, W, W, W, W} }
+  {1, 13},
+  {13, 1},
+  120,
+  { {W, W, W, W, W, W, W, W, W, W, W, W, W, W, W},
+    {W, B, B, B, B, B, B, B, B, B, B, B, B, B, W},
+    {W, B, B, B, B, B, B, B, B, B, B, B, B, B, W},
+    {W, B, B, B, B, B, B, B, B, B, B, B, B, B, W},
+    {W, B, B, B, B, B, B, B, B, B, B, B, B, B, W},
+    {W, B, B, B, B, B, B, B, B, B, B, B, B, B, W},
+    {W, B, B, B, W, B, B, B, B, B, B, B, B, B, W},
+    {W, B, B, S, B, S, B, B, B, B, B, B, B, B, W},
+    {W, W, W, W, B, B, B, B, B, B, B, B, B, B, W},
+    {W, B, B, W, B, W, M, M, B, W, B, B, B, B, W},
+    {W, D, B, B, B, S, S, S, B, W, B, B, B, B, W},
+    {W, B, P, P, W, M, M, M, M, W, B, B, B, B, W},
+    {W, B, P, P, B, B, B, W, W, W, B, B, B, B, W},
+    {W, B, B, S, P, B, B, B, B, B, B, B, B, B, W},
+    {W, W, W, W, W, W, W, W, W, W, W, W, W, W, W} }
 };
+
+level_t level2 =\
+{
+  {1, 1 },
+  {13, 10},
+  20, //Is this even possible? I have no idea.
+  //                               1  1  1  1  1
+  // 0  1  2  3  4  5  6  7  8  9  0  1  2  3  4
+  { {W, W, W, W, W, W, W, W, W, W, W, W, W, W, W}, //0
+    {W, B, W, B, B, B, B, B, W, B, B, B, S, B, W}, //1
+    {W, B, S, B, S, B, S, B, B, S, B, B, W, B, W}, //2
+    {W, B, S, B, S, B, S, B, B, S, B, B, S, B, W}, //3
+    {W, B, B, B, W, B, W, B, B, B, B, B, S, B, W}, //4
+    {W, S, S, S, S, S, S, S, S, S, B, B, B, B, W}, //5
+    {W, B, B, B, S, B, B, B, B, S, S, S, S, B, W}, //6
+    {W, B, S, B, S, B, S, S, B, B, S, B, B, B, W}, //7
+    {W, B, S, B, S, B, B, S, S, B, S, B, S, B, W}, //8
+    {W, B, S, B, S, S, B, S, B, B, S, B, S, S, W}, //9
+    {W, B, D, B, B, B, B, S, B, S, S, B, S, B, W}, //10
+    {W, B, S, S, S, S, S, S, B, B, B, B, S, B, W}, //11
+    {W, B, S, S, S, S, S, S, S, S, S, S, S, B, W}, //12
+    {W, B, B, B, B, B, B, B, B, B, B, B, B, B, W}, //13
+    {W, W, W, W, W, W, W, W, W, W, W, W, W, W, W} }//14
+};
+	
 int main(int argc, char **argv) {
 	ST_Init();
 
@@ -39,7 +64,8 @@ int main(int argc, char **argv) {
 		main_spritesheet_data.width,
 		main_spritesheet_data.height);
 	World world = World(player_ss);
-	world.load_level(player_ss, level1);
+	world.load_level(player_ss, level2);
+	bool player_mode = true;
 	while(aptMainLoop())
 	{
 		ST_RenderStartFrame(GFX_TOP);
@@ -69,10 +95,14 @@ int main(int argc, char **argv) {
 					world.player.move_rel(1, 0);
 				world.player.direction = RIGHT;
 			}
-			world.render_all(true, framecount);
+			if (ST_InputButtonPressed(KEY_SELECT))
+			{
+				player_mode = !player_mode;
+			}
+			world.render_all(player_mode, framecount);
 		ST_RenderEndRender();
 		if (world.player_is_on_mine())
-			world.load_level(player_ss, level1);
+			world.load_level(player_ss, level2);
 		framecount++;
 	}
 
