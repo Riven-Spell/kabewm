@@ -51,7 +51,7 @@ endif
 ASFLAGS := -g $(ARCH)
 LDFLAGS = -specs=3dsx.specs -g $(ARCH) -Wl,-Map,$(notdir $*.map)
 
-LIBS := -lctru -lm
+LIBS := -lspritetools -lsf2d -lcitro3d -lctru -lm
 LIBDIRS := $(PORTLIBS) $(CTRULIB) ./lib
 
 #---------------------------------------------------------------------------------
