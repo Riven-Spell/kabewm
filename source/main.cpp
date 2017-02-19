@@ -1,11 +1,34 @@
 #include <common.h>
 #include "spritesheets/assets.c"
-
+#include "entity.h"
+#include "player.h"
+#include "world.h"
+#include "levels.h"
 // The following assumes a 128x128px spritesheet with 16x16px sprites.
 #define render_sprite(spritesheet, sprite_index, x, y) ST_RenderSpritePosition((spritesheet), ((sprite_index) % 8) * 16, ((sprite_index) / 8) * 16, 16, 16, (x), (y)) 
 
 //extern const st_image player_spritesheet;
-
+level_t level1 =\
+{
+	{1, 13},
+	{13, 1},
+	120,
+	{ {W, W, W, W, W, W, W, W, W, W, W, W, W, W, W},
+		{W, B, B, B, B, B, B, B, B, B, B, B, B, B, W},
+		{W, B, B, B, B, B, B, B, B, B, B, B, B, B, W},
+		{W, B, B, B, B, B, B, B, B, B, B, B, B, B, W},
+		{W, B, B, B, B, B, B, B, B, B, B, B, B, B, W},
+		{W, B, B, B, B, B, B, B, B, B, B, B, B, B, W},
+		{W, B, B, B, W, B, B, B, B, B, B, B, B, B, W},
+		{W, B, B, S, B, S, B, B, B, B, B, B, B, B, W},
+		{W, W, W, W, B, B, B, B, B, B, B, B, B, B, W},
+		{W, B, B, W, B, W, M, M, B, W, B, B, B, B, W},
+		{W, D, B, B, B, S, S, S, B, W, B, B, B, B, W},
+		{W, B, P, P, W, M, M, M, M, W, B, B, B, B, W},
+		{W, B, P, P, B, B, B, W, W, W, B, B, B, B, W},
+		{W, B, B, S, P, B, B, B, B, B, B, B, B, B, W},
+		{W, W, W, W, W, W, W, W, W, W, W, W, W, W, W} }
+};
 int main(int argc, char **argv) {
 	ST_Init();
 
@@ -15,30 +38,41 @@ int main(int argc, char **argv) {
 		main_spritesheet_data.pixel_data,
 		main_spritesheet_data.width,
 		main_spritesheet_data.height);
-
+	World world = World(player_ss);
+	world.load_level(player_ss, level1);
 	while(aptMainLoop())
 	{
 		ST_RenderStartFrame(GFX_TOP);
 		ST_InputScan();
+			if (ST_InputButtonPressed(KEY_DUP))
+			{
+				if (world.player_can_move_rel(0, -1))
+					world.player.move_rel(0, -1);
+				world.player.direction = UP;
+			}
 
-		/*ST_RenderSpritePosition(
-			player_ss,
-			0, 0,
-			16, 16,
-			100, 100
-		);*/
-
-		int index;
-		if(framecount % 4 == 0)
-			index = 4;
-		else if(framecount % 4 == 2)
-			index = 5;
-		else
-			index = 3;
-
-		render_sprite(player_ss, index, 100, 100); 
-
+			if (ST_InputButtonPressed(KEY_DDOWN))
+			{
+				if (world.player_can_move_rel(0, 1))
+					world.player.move_rel(0, 1);
+				world.player.direction = DOWN;
+			}
+			if (ST_InputButtonPressed(KEY_DLEFT))
+			{
+				if (world.player_can_move_rel(-1, 0))
+					world.player.move_rel(-1, 0);
+				world.player.direction = LEFT;
+			}
+			if (ST_InputButtonPressed(KEY_DRIGHT))
+			{
+				if (world.player_can_move_rel(1, 0))
+					world.player.move_rel(1, 0);
+				world.player.direction = RIGHT;
+			}
+			world.render_all(true, framecount);
 		ST_RenderEndRender();
+		if (world.player_is_on_mine())
+			world.load_level(player_ss, level1);
 		framecount++;
 	}
 

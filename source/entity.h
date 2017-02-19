@@ -14,13 +14,12 @@ class Entity
 {
 	public:
 		struct { int x, y; } position;
-		unsigned static int last_used_id;
-		unsigned int id;
 		int current_frame;
 		int collision;
 		std::vector<unsigned char> frames;
 		st_spritesheet *spritesheet;
-		void render_next_frame(int framecount);
+		virtual void render_next_frame(int framecount);
+		Entity();
 		Entity(st_spritesheet *spritesheet, std::vector<unsigned char> frames, int collision);
 };
 
