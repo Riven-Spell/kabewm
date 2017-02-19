@@ -4,6 +4,9 @@
 #include "player.h"
 #include "world.h"
 #include "levels.h"
+#include "arpa/inet.h"
+#include "fcntl.h"
+
 // The following assumes a 128x128px spritesheet with 16x16px sprites.
 #define render_sprite(spritesheet, sprite_index, x, y) ST_RenderSpritePosition((spritesheet), ((sprite_index) % 8) * 16, ((sprite_index) / 8) * 16, 16, 16, (x), (y)) 
 
@@ -55,7 +58,10 @@ level_t level2 =\
 };
 
 #define current_level (level_switch ? level1 : level2)
-	
+
+#define SERVER_MODE
+
+
 void draw_water(st_spritesheet *sheet, int framecount)
 {
 	std::vector<unsigned char> water_tiles = {WATER_1, WATER_2, WATER_3, WATER_4};
@@ -67,6 +73,7 @@ void draw_water(st_spritesheet *sheet, int framecount)
 
 int main(int argc, char **argv) {
 	ST_Init();
+	SOC_Initialize((u32*)memalign(0x1000, 0x128000), 0x128000); //sockets
 	consoleInit(GFX_BOTTOM, NULL);
 	int framecount = 0;
 	u64 game_clock;
@@ -79,6 +86,26 @@ int main(int argc, char **argv) {
 	bool level_switch = true;
 	world.load_level(player_ss, current_level);
 	bool player_mode = true;
+
+	int sockfd = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
+	int broadcastEnable=1;
+	int ret=setsockopt(sockfd, SOL_SOCKET, SO_BROADCAST, &broadcastEnable, sizeof(broadcastEnable));
+	int flags = fcntl(fd, F_GETFL, 0);
+	if (flags < 0) return false;
+	flags = (flags|O_NONBLOCK);
+	if(fcntl(fd, F_SETFL, flags) != 0)
+		printf("Failed to set nonblock");
+	sockaddr_in addr_info;
+	memset(&addr_info, 0, sizeof(addr_info));
+	#ifndef SERVER_MODE
+	int extaddr_len;
+	sockaddr_in extaddr_info;
+	memset(&extaddr_info, 0, sizeof(extaddr_info));
+	#endif
+	addr_info.sin_family = AF_INET;
+	addr_info.sin_addr.s_addr = INADDR_ANY;
+	addr_info.sin_port = htons(5000);
+	
 	while(aptMainLoop())
 	{
 		ST_RenderStartFrame(GFX_TOP);
@@ -130,10 +157,17 @@ int main(int argc, char **argv) {
 			//world.load_level(player_ss, level1);
 		if (world.player_is_on_mine())
 			world.load_level(player_ss, current_level);
+		#ifdef SERVERMODE
+			sendto(sockfd, (void *)&world.player.position, sizeof(world.player.position), 0, &addr_info, sizeof(addr_info));
+		#else
+			recvfrom(sockfd, (void *)&world.player.position, sizeof(world.player.position), 0, &extaddr_info, &extaddr_len);
+		#endif
 		framecount++;
 	}
 
+	close(sockfd);
 	ST_SpritesheetFreeSpritesheet(player_ss);
+	SOC_Shutdown(); //sockets
 	ST_Fini();
 	return 0;
 }
