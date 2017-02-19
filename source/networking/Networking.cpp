@@ -59,13 +59,6 @@ Result Networking::Connect(udsNetworkScanInfo* network, udsConnectionType cType)
 
 Result Networking::RecieveData(void* buf, size_t bufsize)
 {
-    udsBindContext tmpbindctx;
-    if(server)
-    {
-        //udsBind(&tmpbindctx,)
-    }
-    else
-    {}
     this.ret = udsPullPacket(&this.bindctx, buf, bufsize, &this.actual_size, &this.network);
     return this.ret;
 }
@@ -84,8 +77,13 @@ Result Networking::SendData(void* buf,size_t bufsize)
     else
     {
         netnode = UDS_HOST_NETWORKNODEID;
-        tmpdatchan = 2;
+        tmpdatchan = 1;
         tmpflags = UDS_SENDFLAG_Default;
     }
     udsSendTo(netnode,tmpdatchan,tmpflags,buf,bufsize);
+}
+
+Result Networking::OpenServer()
+{
+    this.ret = udsCreateNetwork(&this.networkstruct, &this.passphrase, strlen(this.passphrase)+1, &this.bindctx, 1, recv_buffer_size);
 }
