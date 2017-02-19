@@ -1,5 +1,5 @@
 #include <common.h>
-#include "spritesheets/player-with-extra.c"
+#include "spritesheets/main.c"
 
 // The following assumes a 128x128px spritesheet with 16x16px sprites.
 #define render_sprite(spritesheet, sprite_index, x, y) ST_RenderSpritePosition((spritesheet), ((sprite_index) % 8) * 16, ((sprite_index) / 8) * 16, 16, 16, (x), (y)) 
@@ -12,9 +12,9 @@ int main(int argc, char **argv) {
 	int framecount = 0;
 
 	st_spritesheet *player_ss = ST_SpritesheetCreateSpritesheet(
-		player_spritesheet.pixel_data,
-		player_spritesheet.width,
-		player_spritesheet.height);
+		main_spritesheet_data.pixel_data,
+		main_spritesheet_data.width,
+		main_spritesheet_data.height);
 	while(aptMainLoop())
 	{
 		ST_RenderStartFrame(GFX_TOP);
