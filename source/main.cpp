@@ -56,6 +56,15 @@ level_t level2 =\
 
 #define current_level (level_switch ? level1 : level2)
 	
+void draw_water(st_spritesheet *sheet, int framecount)
+{
+	std::vector<unsigned char> water_tiles = {WATER_1, WATER_2, WATER_3, WATER_4};
+	for (int k = 0; k < 321; k += 320)
+		for (int i = 0; i < 5; i++)
+			for (int j = 0; j < 15; j++)
+			ST_RenderSpritePosition(sheet, (water_tiles[(int)(framecount % (80)) / 20] % 8) * 16, (water_tiles[(int)(framecount % (80)) / 20] / 8 * 16), 16, 16, 16 * i + k, 16 * j);
+}
+
 int main(int argc, char **argv) {
 	ST_Init();
 	consoleInit(GFX_BOTTOM, NULL);
@@ -109,6 +118,7 @@ int main(int argc, char **argv) {
 				world.load_level(player_ss, current_level);
 			}
 			world.render_all(player_mode, framecount);
+			draw_water(player_ss, framecount);
 			game_clock = ST_TimeRunning() - world.start_time;
 			if (game_clock > 1000 * current_level.seconds && !world.player_won())
 				world.load_level(player_ss, current_level);
