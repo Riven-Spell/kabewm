@@ -34,7 +34,7 @@ level_t level2 =\
 {
   {1, 1 },
   {13, 10},
-  20, //Is this even possible? I have no idea.
+  2000, //Is this even possible? I have no idea.
   //                               1  1  1  1  1
   // 0  1  2  3  4  5  6  7  8  9  0  1  2  3  4
   { {W, W, W, W, W, W, W, W, W, W, W, W, W, W, W}, //0
