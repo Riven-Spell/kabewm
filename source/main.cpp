@@ -1,5 +1,5 @@
 #include <common.h>
-#include "spritesheets/main.c"
+#include "spritesheets/assets.c"
 
 // The following assumes a 128x128px spritesheet with 16x16px sprites.
 #define render_sprite(spritesheet, sprite_index, x, y) ST_RenderSpritePosition((spritesheet), ((sprite_index) % 8) * 16, ((sprite_index) / 8) * 16, 16, 16, (x), (y)) 
