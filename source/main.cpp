@@ -59,7 +59,7 @@ void draw_water(st_spritesheet *sheet, int framecount)
 	std::vector<unsigned char> water_tiles = {WATER_1, WATER_2, WATER_3, WATER_4};
 	for (int k = 0; k < 321; k += 320)
 		for (int i = 0; i < 5; i++)
-			for (int j = 1; j < 5; j++)
+			for (int j = 0; j < 15; j++)
 			ST_RenderSpritePosition(sheet, (water_tiles[(int)(framecount % (80)) / 20] % 8) * 16, (water_tiles[(int)(framecount % (80)) / 20] / 8 * 16), 16, 16, 16 * i + k, 16 * j);
 }
 int main(int argc, char **argv) {
