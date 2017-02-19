@@ -1,0 +1,5 @@
+APP_TITLE = Kabewm
+APP_DESCRIPTION = 3DS homebrew template.
+APP_AUTHOR = ShelAdeleSam
+APP_PRODUCT_CODE = CTR-U-KBWM
+APP_UNIQUE_ID = 0x9532
