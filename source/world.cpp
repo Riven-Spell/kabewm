@@ -99,6 +99,7 @@ void World::load_level(st_spritesheet *sheet, level_t level)
 	this->player.position.y = level.start_position.y;
 	this->end_position.x = level.end_position.x;
 	this->end_position.y = level.end_position.y;
+	consoleClear();
 	this->start_time = ST_TimeRunning();
 }
 

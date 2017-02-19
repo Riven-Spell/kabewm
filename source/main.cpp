@@ -47,13 +47,15 @@ level_t level2 =\
     {W, B, S, B, S, B, S, S, B, B, S, B, B, B, W}, //7
     {W, B, S, B, S, B, B, S, S, B, S, B, S, B, W}, //8
     {W, B, S, B, S, S, B, S, B, B, S, B, S, S, W}, //9
-    {W, B, D, B, B, B, B, S, B, S, S, B, S, B, W}, //10
+    {W, B, D, B, B, B, B, S, B, S, S, B, S, R, W}, //10
     {W, B, S, S, S, S, S, S, B, B, B, B, S, B, W}, //11
     {W, B, S, S, S, S, S, S, S, S, S, S, S, B, W}, //12
     {W, B, B, B, B, B, B, B, B, B, B, B, B, B, W}, //13
     {W, W, W, W, W, W, W, W, W, W, W, W, W, W, W} }//14
 };
 
+#define current_level (level_switch ? level1 : level2)
+	
 void draw_water(st_spritesheet *sheet, int framecount)
 {
 	std::vector<unsigned char> water_tiles = {WATER_1, WATER_2, WATER_3, WATER_4};
@@ -62,6 +64,7 @@ void draw_water(st_spritesheet *sheet, int framecount)
 			for (int j = 0; j < 15; j++)
 			ST_RenderSpritePosition(sheet, (water_tiles[(int)(framecount % (80)) / 20] % 8) * 16, (water_tiles[(int)(framecount % (80)) / 20] / 8 * 16), 16, 16, 16 * i + k, 16 * j);
 }
+
 int main(int argc, char **argv) {
 	ST_Init();
 	consoleInit(GFX_BOTTOM, NULL);
@@ -73,7 +76,8 @@ int main(int argc, char **argv) {
 		main_spritesheet_data.height);
 	ST_RenderSetBackground(0x82, 0xE1, 0x11);
 	World world = World(player_ss);
-	world.load_level(player_ss, level2);
+	bool level_switch = true;
+	world.load_level(player_ss, current_level);
 	bool player_mode = true;
 	while(aptMainLoop())
 	{
@@ -108,18 +112,24 @@ int main(int argc, char **argv) {
 			{
 				player_mode = !player_mode;
 			}
+			if (ST_InputButtonPressed(KEY_START))
+			{
+				level_switch = !level_switch;
+				world.load_level(player_ss, current_level);
+			}
 			world.render_all(player_mode, framecount);
 			draw_water(player_ss, framecount);
 			game_clock = ST_TimeRunning() - world.start_time;
-			if (game_clock > 1000 * level1.seconds)
-				world.load_level(player_ss, level1);
+			if (game_clock > 1000 * current_level.seconds && !world.player_won())
+				world.load_level(player_ss, current_level);
 			else
-				printf("\x1b[0;0H%03d",level1.seconds - (int)game_clock/1000);	
+				printf("\x1b[0;0H%03d",current_level.seconds - (int)game_clock/1000);	
 		ST_RenderEndRender();
 		if (world.player_won())
-			world.load_level(player_ss, level1);
+			printf("YOU WON!!");
+			//world.load_level(player_ss, level1);
 		if (world.player_is_on_mine())
-			world.load_level(player_ss, level2);
+			world.load_level(player_ss, current_level);
 		framecount++;
 	}
 
