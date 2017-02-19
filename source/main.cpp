@@ -53,7 +53,15 @@ level_t level2 =\
     {W, B, B, B, B, B, B, B, B, B, B, B, B, B, W}, //13
     {W, W, W, W, W, W, W, W, W, W, W, W, W, W, W} }//14
 };
-	
+
+void draw_water(st_spritesheet *sheet, int framecount)
+{
+	std::vector<unsigned char> water_tiles = {WATER_1, WATER_2, WATER_3, WATER_4};
+	for (int k = 0; k < 321; k += 320)
+		for (int i = 0; i < 5; i++)
+			for (int j = 1; j < 5; j++)
+			ST_RenderSpritePosition(sheet, (water_tiles[(int)(framecount % (80)) / 20] % 8) * 16, (water_tiles[(int)(framecount % (80)) / 20] / 8 * 16), 16, 16, 16 * i + k, 16 * j);
+}
 int main(int argc, char **argv) {
 	ST_Init();
 	consoleInit(GFX_BOTTOM, NULL);
@@ -101,6 +109,7 @@ int main(int argc, char **argv) {
 				player_mode = !player_mode;
 			}
 			world.render_all(player_mode, framecount);
+			draw_water(player_ss, framecount);
 			game_clock = ST_TimeRunning() - world.start_time;
 			if (game_clock > 1000 * level1.seconds)
 				world.load_level(player_ss, level1);
