@@ -9,10 +9,10 @@ int main(int argc, char **argv) {
 	{
 		//all the top screen stuff now
 		consoleInit(GFX_TOP, NULL);
-		
+
 		//all the bottom screen stuff now
 		consoleInit(GFX_BOTTOM, NULL);
 	}
-    	St_Fini();
-	return 0;	
+	ST_Fini();
+	return 0;
 }
