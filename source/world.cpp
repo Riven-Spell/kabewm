@@ -23,10 +23,15 @@ void World::clear(st_spritesheet *sheet)
 
 void World::render_all(bool isPlayer, int framecount)
 {
-	for(int i=0; i<WORLD_HEIGHT; i++)
-		for(int j=0; j<WORLD_WIDTH; j++)
-			if(grid[i][j].frames.size() && ((isPlayer && grid[i][j].collision != COLLISION_MINE_SPECTATOR) || (!isPlayer && grid[i][j].collision != COLLISION_MINE_PLAYER)))
+	for(int i=0; i<WORLD_HEIGHT; i++){
+		for(int j=0; j<WORLD_WIDTH; j++){
+			Entity ent = grid[i][j];
+			int col = ent.collision;
+			//if(grid[i][j].frames.size() && ((isPlayer && grid[i][j].collision != COLLISION_MINE_SPECTATOR) || (!isPlayer && grid[i][j].collision != COLLISION_MINE_PLAYER)))
+			if((isPlayer && col != COLLISION_MINE_SPECTATOR) || (!isPlayer && col != COLLISION_MINE_PLAYER && col != COLLISION_WALL))
 				grid[i][j].render_next_frame(framecount);
+		}
+	}
 	this->player.render_next_frame(1);
 }
 
